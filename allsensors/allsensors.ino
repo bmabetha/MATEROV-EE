@@ -1,8 +1,14 @@
+#include <dht.h>
+
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
+#include <DHT.h>
 #include "MS5837.h"
+
+#define dataPin 4
+dht DHT;
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 MS5837 sensor;
@@ -43,12 +49,10 @@ void loop() {
   Serial.print(event.orientation.z, 4);
   Serial.println("");
   
-  delay(100);
+  //delay(100);
   
   //Data from the Depth Sensor
-  Serial.print("Pressure: ");  
   sensor.read();
- 
   Serial.print("Pressure: "); 
   Serial.print(sensor.pressure()); 
   Serial.println(" mbar");
@@ -65,5 +69,20 @@ void loop() {
   Serial.print(sensor.altitude()); 
   Serial.println(" m above mean sea level");
 
-  delay(1000);
+  //delay(1000);
+
+  // DHT Sensor
+  int readData = DHT.read22(dataPin); // Reads the data from the sensor
+  float t = DHT.temperature; // Gets the values of the temperature
+  float h = DHT.humidity; // Gets the values of the humidity
+  
+  // Printing the results on the serial monitor
+  Serial.print("Temperature = ");
+  Serial.print(t);
+  Serial.print(" *C ");
+  Serial.print("    Humidity = ");
+  Serial.print(h);
+  Serial.println(" % ");
+  
+  delay(2000);
 }
